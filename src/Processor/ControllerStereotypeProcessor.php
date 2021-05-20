@@ -128,18 +128,18 @@ class ControllerStereotypeProcessor extends AbstractStereotypeProcessor
                     $actionParams[$param->name] = $params[$param->name];
                 }
 
-                $response = call_user_func_array($action, array_values($actionParams));
+                $responseData = call_user_func_array($action, array_values($actionParams));
 
-                if ($response instanceof ResponseInterface) {
-                    return $response;
+                if ($responseData instanceof ResponseInterface) {
+                    return $responseData;
                 }
 
 
                 foreach ($this->getPrioritizedComponents(Interceptor::class) as $interceptor) {
-                    $response = $interceptor($request, $response, $args);
+                    $interceptor($responseData, $request, $response, $args);
                 }
 
-                return $response;
+                 return $response;
             };
 
             $route = call_user_func([$app, $methodName], $path, $routeAction);

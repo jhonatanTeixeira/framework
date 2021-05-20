@@ -14,11 +14,7 @@ use Vox\Framework\Behavior\Interceptor;
  */
 class ResponseInterceptor
 {
-    public function __invoke(ServerRequestInterface $request, $data, array $args) {
-        $response = (new ResponseFactory())->createResponse();
-
-        $response->getBody()->write(json_encode($data));
-
-        return $response;
+    public function __invoke($responseData, ServerRequestInterface $request, ResponseInterface $response, array $args) {
+        $response->getBody()->write(json_encode($responseData));
     }
 }

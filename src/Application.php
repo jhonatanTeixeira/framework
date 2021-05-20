@@ -9,11 +9,16 @@ use Psr\Http\Message\ServerRequestInterface;
 use Slim\App;
 use Slim\Factory\AppFactory;
 use Slim\Psr7\Factory\ResponseFactory;
+use Slim\Psr7\Factory\StreamFactory;
+use Vox\Data\ObjectExtractor;
+use Vox\Data\ObjectHydrator;
+use Vox\Data\Serializer;
 use Vox\Framework\Behavior\Controller;
 use Vox\Framework\Behavior\Interceptor;
 use Vox\Framework\Behavior\Middleware;
 use Vox\Framework\Behavior\PreDispatch;
 use Vox\Framework\Behavior\Service;
+use Vox\Metadata\Factory\MetadataFactoryFactory;
 
 class Application
 {
@@ -32,7 +37,13 @@ class Application
             Interceptor::class
         )->withBeans([
             App::class => AppFactory::create(),
-        ]);
+            ResponseFactory::class => new ResponseFactory(),
+            StreamFactory::class => new StreamFactory(),
+        ])->withComponents(
+            ObjectExtractor::class,
+            ObjectHydrator::class,
+            Serializer::class,
+        );
 
         if ($configure) {
             $configure($builder);

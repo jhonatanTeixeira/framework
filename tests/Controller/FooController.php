@@ -15,6 +15,6 @@ class FooController
      * @Get()
      */
     public function get() {
-        return [];
+        return ["asdasd" => "asdasdasd"];
     }
 }
