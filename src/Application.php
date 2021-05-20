@@ -10,7 +10,9 @@ use Slim\App;
 use Slim\Factory\AppFactory;
 use Slim\Psr7\Factory\ResponseFactory;
 use Vox\Framework\Behavior\Controller;
+use Vox\Framework\Behavior\Interceptor;
 use Vox\Framework\Behavior\Middleware;
+use Vox\Framework\Behavior\PreDispatch;
 use Vox\Framework\Behavior\Service;
 
 class Application
@@ -21,11 +23,16 @@ class Application
 
     public function configure(callable $configure = null) {
         $builder = new ContainerBuilder();
-        $builder->withStereotypes(Controller::class, Service::class, Middleware::class)
-            ->withBeans([
-                App::class => new App(),
-            ])
-        ;
+
+        $builder->withStereotypes(
+            Controller::class,
+            Service::class,
+            Middleware::class,
+            PreDispatch::class,
+            Interceptor::class
+        )->withBeans([
+            App::class => AppFactory::create(),
+        ]);
 
         if ($configure) {
             $configure($builder);
@@ -55,6 +62,6 @@ class Application
     public function handle(ServerRequestInterface $request): ResponseInterface {
         $app = $this->getContainer()->get(App::class);
 
-        return $app($request, (new ResponseFactory())->createResponse());
+        return $app->handle($request);
     }
 }

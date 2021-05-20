@@ -10,8 +10,6 @@ class CallbackPriorityQueue extends \SplHeap
 
     public function __construct(callable $comparator, iterable $collection = null)
     {
-        parent::__construct();
-
         $this->comparator = $comparator;
 
         if ($collection) {

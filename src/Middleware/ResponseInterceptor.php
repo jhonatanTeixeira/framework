@@ -5,21 +5,19 @@ namespace Vox\Framework\Middleware;
 
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Psr\Http\Server\RequestHandlerInterface;
 use Slim\Psr7\Factory\ResponseFactory;
-use Vox\Framework\Behavior\Middleware;
+use Slim\Psr7\Stream;
+use Vox\Framework\Behavior\Interceptor;
 
 /**
- * @Middleware
+ * @Interceptor()
  */
 class ResponseInterceptor
 {
-    public function __invoke(ServerRequestInterface $request, ResponseInterface $response, callable $next) {
-        $response = $next($request, $response);
+    public function __invoke(ServerRequestInterface $request, $data, array $args) {
+        $response = (new ResponseFactory())->createResponse();
 
-        if (!$response instanceof ResponseInterface) {
-            $response = ResponseFactory::createResponse(200)->withBody(json_encode($response));
-        }
+        $response->getBody()->write(json_encode($data));
 
         return $response;
     }
