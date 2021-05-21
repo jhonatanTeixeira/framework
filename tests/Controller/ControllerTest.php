@@ -12,6 +12,6 @@ class ControllerTest extends TestCase
     public function testShouldGetArray() {
         $data = $this->application->handle((new ServerRequestFactory())->createServerRequest('GET', '/foo'));
 
-        $this->assertEquals('[]', $data->getBody()->getContents());
+        $this->assertEquals('{"foo":"bar"}', $data->getBody()->getContents());
     }
 }

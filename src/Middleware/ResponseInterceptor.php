@@ -3,18 +3,23 @@
 
 namespace Vox\Framework\Middleware;
 
+use PhpBeans\Annotation\Autowired;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Slim\Psr7\Factory\ResponseFactory;
-use Slim\Psr7\Stream;
 use Vox\Framework\Behavior\Interceptor;
+use Vox\Framework\Component\Psr7Factory;
 
 /**
  * @Interceptor()
  */
 class ResponseInterceptor
 {
+    /**
+     * @Autowired()
+     */
+    private Psr7Factory $psr7Factory;
+
     public function __invoke($responseData, ServerRequestInterface $request, ResponseInterface $response, array $args) {
-        $response->getBody()->write(json_encode($responseData));
+        return $this->psr7Factory->createResponse(200, $responseData);
     }
 }

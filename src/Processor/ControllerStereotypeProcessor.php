@@ -136,7 +136,7 @@ class ControllerStereotypeProcessor extends AbstractStereotypeProcessor
 
 
                 foreach ($this->getPrioritizedComponents(Interceptor::class) as $interceptor) {
-                    $interceptor($responseData, $request, $response, $args);
+                    $response = $interceptor($responseData, $request, $response, $args);
                 }
 
                  return $response;
