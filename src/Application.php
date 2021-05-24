@@ -20,6 +20,7 @@ use Vox\Framework\Behavior\Controller;
 use Vox\Framework\Behavior\Formatter;
 use Vox\Framework\Behavior\Interceptor;
 use Vox\Framework\Behavior\Middleware;
+use Vox\Framework\Behavior\ParamResolverInterface;
 use Vox\Framework\Behavior\PreDispatch;
 use Vox\Framework\Behavior\Service;
 
@@ -39,6 +40,7 @@ class Application
             PreDispatch::class,
             Interceptor::class,
             Formatter::class,
+            ParamResolverInterface::class,
         )->withBeans([
             App::class => AppFactory::create(),
             ResponseFactory::class => new ResponseFactory(),

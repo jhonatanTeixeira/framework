@@ -57,7 +57,12 @@ class ControllerStereotypeProcessor extends AbstractStereotypeProcessor
     }
 
     private function parsePath($controller, $method) {
-        return implode('/', array_filter([$controller->path, $method->path]));
+        return '/' . implode(
+            '/',
+            array_filter(
+                array_map(fn($path) => preg_replace('/^\//', '', $path), [$controller->path, $method->path])
+            )
+        );
     }
 
     private function getPrioritizedComponents(string $className) {
@@ -101,8 +106,10 @@ class ControllerStereotypeProcessor extends AbstractStereotypeProcessor
                     $methodName = $methodMap[$currentMethod];
                     break;
                 }
+            }
 
-                continue 2;
+            if (null === $method || null === $methodName) {
+                continue;
             }
 
             $path = $this->parsePath($config, $method);
@@ -115,7 +122,10 @@ class ControllerStereotypeProcessor extends AbstractStereotypeProcessor
 
                 /* @var $resolver ParamResolverInterface */
                 foreach ($container->getBeansByComponent(ParamResolverInterface::class) as $resolver) {
-                    $params = array_merge($params, $resolver->resolve($controllerMetadata, $methodMetadata, $request));
+                    $params = array_merge(
+                        $params,
+                        $resolver->resolve($controllerMetadata, $methodMetadata, $request, $args)
+                    );
                 }
 
                 foreach ($this->getPrioritizedComponents(PreDispatch::class) as $preDispatch) {
@@ -125,7 +135,7 @@ class ControllerStereotypeProcessor extends AbstractStereotypeProcessor
                 $actionParams = [];
 
                 foreach ($methodMetadata->params as $param) {
-                    $actionParams[$param->name] = $params[$param->name];
+                    $actionParams[$param->name] ??= $params[$param->name] ?? null;
                 }
 
                 $responseData = call_user_func_array($action, array_values($actionParams));
@@ -145,40 +155,5 @@ class ControllerStereotypeProcessor extends AbstractStereotypeProcessor
             $route = call_user_func([$app, $methodName], $path, $routeAction);
             $this->processMiddleware($route, $methodMetadata, $controllerMetadata);
         }
-
-//        foreach ($controllerMetadata->getAnnotatedMethods(Get::class) as $method) {
-//            /* @var $get \Vox\Framework\Behavior\Get */
-//            $get = $method->getAnnotation(Get::class);
-//            $route = $app->get($this->parsePath($config, $get), $method->reflection->getClosure($stereotype));
-//            $this->processMiddleware($route, $method, $controllerMetadata);
-//        }
-//
-//        foreach ($controllerMetadata->getAnnotatedMethods(Post::class) as $method) {
-//            /* @var $get \Vox\Framework\Behavior\Get */
-//            $get = $method->getAnnotation(Post::class);
-//            $route = $app->post($this->parsePath($config, $get), $method->reflection->getClosure($stereotype));
-//            $this->processMiddleware($route, $method, $controllerMetadata);
-//        }
-//
-//        foreach ($controllerMetadata->getAnnotatedMethods(Put::class) as $method) {
-//            /* @var $get \Vox\Framework\Behavior\Get */
-//            $get = $method->getAnnotation(Put::class);
-//            $route = $app->put($this->parsePath($config, $get), $method->reflection->getClosure($stereotype));
-//            $this->processMiddleware($route, $method, $controllerMetadata);
-//        }
-//
-//        foreach ($controllerMetadata->getAnnotatedMethods(Patch::class) as $method) {
-//            /* @var $get \Vox\Framework\Behavior\Get */
-//            $get = $method->getAnnotation(Patch::class);
-//            $route = $app->patch($this->parsePath($config, $get), $method->reflection->getClosure($stereotype));
-//            $this->processMiddleware($route, $method, $controllerMetadata);
-//        }
-//
-//        foreach ($controllerMetadata->getAnnotatedMethods(Delete::class) as $method) {
-//            /* @var $get \Vox\Framework\Behavior\Get */
-//            $get = $method->getAnnotation(Delete::class);
-//            $route = $app->delete($this->parsePath($config, $get), $method->reflection->getClosure($stereotype));
-//            $this->processMiddleware($route, $method, $controllerMetadata);
-//        }
     }
 }
