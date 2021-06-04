@@ -72,19 +72,25 @@ class TestListener implements \PHPUnit\Framework\TestListener
             return;
         }
 
+        $test->setProphet($this->prophet);
+
         /* @var $metadata ClassMetadata */
         $metadata = $this->metadataFactory->getMetadataForClass(get_class($test));
         $app = new Application();
         $app->configure(fn(ContainerBuilder $builder) => $builder->withAppNamespaces());
         $mocks = [];
+        $beans = [];
 
         foreach ($metadata->getAnnotatedProperties(Mock::class) as $propertyMetadata) {
-            $type = $propertyMetadata->type;
-            $mocks[$type] = $mock = $this->prophet->prophesize($type);
+            $annotation = $propertyMetadata->getAnnotation(Mock::class);
+            $type = $annotation->type;
+            $serviceId = $annotation->serviceId ?? $type;
+            $mocks[$serviceId] = $mock = $this->prophet->prophesize($type);
+            $beans[$serviceId] = $mock->reveal();
             $propertyMetadata->setValue($test, $mock);
         }
 
-        $app->getBuilder()->withBeans($mocks);
+        $app->getBuilder()->withBeans($beans);
 
         $test->setApplication($app);
 

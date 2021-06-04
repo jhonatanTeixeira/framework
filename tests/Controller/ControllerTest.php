@@ -4,12 +4,20 @@
 namespace Vox\Framework\Tests\Controller;
 
 
+use Prophecy\Prophecy\ObjectProphecy;
 use Slim\Psr7\Factory\ServerRequestFactory;
 use Slim\Psr7\Factory\StreamFactory;
+use Vox\Framework\Test\Behavior\Mock;
 use Vox\Framework\Test\TestCase;
 
 class ControllerTest extends TestCase
 {
+    /**
+     * @Mock(MockableService::class)
+     * @var MockableService|ObjectProphecy
+     */
+    private ObjectProphecy $mockableService;
+
     public function testShouldGetList() {
         $data = $this->application->handle((new ServerRequestFactory())->createServerRequest('GET', '/foo'));
 
@@ -30,5 +38,17 @@ class ControllerTest extends TestCase
         );
 
         $this->assertEquals('{"foo":"bar baz"}', $data->getBody()->getContents());
+    }
+
+    public function testShouldMockData()
+    {
+        $this->mockableService->getMockData()->willReturn(['foo' => 'bar']);
+
+        $data = $this->application->handle(
+            (new ServerRequestFactory())
+                ->createServerRequest('GET', '/foo/mock')
+        );
+
+        $this->assertEquals('{"foo":"bar"}', $data->getBody()->getContents());
     }
 }

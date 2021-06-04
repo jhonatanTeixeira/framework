@@ -9,5 +9,14 @@ namespace Vox\Framework\Test\Behavior;
  */
 class Mock
 {
+    /**
+     * @var string
+     * @required
+     */
+    public $type;
 
+    /**
+     * @var string
+     */
+    public $serviceId;
 }

@@ -3,6 +3,7 @@
 
 namespace Vox\Framework\Tests\Controller;
 
+use PhpBeans\Annotation\Autowired;
 use Vox\Framework\Behavior\Controller;
 use Vox\Framework\Behavior\Delete;
 use Vox\Framework\Behavior\Get;
@@ -23,49 +24,55 @@ class FooDto {
  */
 class FooController
 {
-    private array $data;
+    /**
+     * @Autowired()
+     */
+    private FooService $service;
 
-    public function __construct()
-    {
-        $this->data = [
-            new FooDto('bar'),
-            new FooDto('baz'),
-        ];
+    /**
+     * @Autowired()
+     */
+    private MockableService $mockableService;
+
+    /**
+     * @Get("/mock")
+     */
+    public function getMockData() {
+        return $this->mockableService->getMockData();
     }
-
 
     /**
      * @Get()
      */
     public function list() {
-        return $this->data;
+        return $this->service->list();
     }
 
     /**
      * @Get("/{id}")
      */
     public function get($id) {
-        return $this->data[$id];
+        return $this->service->get($id);
     }
 
     /**
      * @Post()
      */
     public function post(FooDto $data) {
-        return $this->data[] = $data;
+        return $this->service->post($data);
     }
 
     /**
      * @Put("{id}")
      */
     public function put($id, FooDto $data) {
-        return $this->data[$id] = $data;
+        return $this->service->put($id, $data);
     }
 
     /**
      * @Delete("{id}")
      */
     public function delete($id) {
-        $this->data = array_filter($this->data, fn($index) => $id == $index, ARRAY_FILTER_USE_KEY);
+        $this->service->delete($id);
     }
 }
