@@ -26,31 +26,46 @@ use Vox\Framework\Behavior\Service;
 
 class Application
 {
-    private ?ContainerBuilder $builder = null;
+    protected ?ContainerBuilder $builder = null;
 
-    private ?Container $container = null;
-
+    protected ?Container $container = null;
+    
+    protected array $namespaces = [];
+    
+    public function addNamespaces(string ...$namespaces) 
+    {
+        $this->namespaces = array_merge($this->namespaces, $namespaces);
+        
+        return $this;
+    }
+    
     public function configure(callable $configure = null) {
         $builder = new ContainerBuilder();
 
-        $builder->withStereotypes(
-            Controller::class,
-            Service::class,
-            Middleware::class,
-            PreDispatch::class,
-            Interceptor::class,
-            Formatter::class,
-            ParamResolverInterface::class,
-        )->withBeans([
-            App::class => AppFactory::create(),
-            ResponseFactory::class => new ResponseFactory(),
-            StreamFactory::class => new StreamFactory(),
-        ])->withFactories([
-            ObjectExtractorInterface::class => fn(MetadataFactory $mf) => new ObjectExtractor($mf),
-            ObjectHydratorInterface::class => fn(MetadataFactory $mf) => new ObjectHydrator($mf),
-        ])->withComponents(
-            Serializer::class,
-        );
+        $builder
+            ->withStereotypes(
+                Controller::class,
+                Service::class,
+                Middleware::class,
+                PreDispatch::class,
+                Interceptor::class,
+                Formatter::class,
+                ParamResolverInterface::class,
+            )
+            ->withBeans([
+                App::class => AppFactory::create(),
+                ResponseFactory::class => new ResponseFactory(),
+                StreamFactory::class => new StreamFactory(),
+            ])
+            ->withFactories([
+                ObjectExtractorInterface::class => fn(MetadataFactory $mf) => new ObjectExtractor($mf),
+                ObjectHydratorInterface::class => fn(MetadataFactory $mf) => new ObjectHydrator($mf),
+            ])
+            ->withComponents(
+                Serializer::class,
+            )
+            ->withAppNamespaces()
+            ->withNamespaces(...$this->namespaces);
 
         if ($configure) {
             $configure($builder);
@@ -58,14 +73,14 @@ class Application
 
         $this->builder = $builder;
     }
-
+    
     public function getBuilder(): ?ContainerBuilder
     {
         return $this->builder;
     }
 
     public function getContainer(): Container {
-        return $this->container ?? $this->container = $this->builder->build();
+        return $this->container ??= $this->builder->build();
     }
 
     public function run() {

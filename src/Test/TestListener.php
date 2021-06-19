@@ -6,7 +6,6 @@ namespace Vox\Framework\Test;
 
 use Metadata\MetadataFactory;
 use PhpBeans\Annotation\Autowired;
-use PhpBeans\Factory\ContainerBuilder;
 use PhpBeans\Metadata\ClassMetadata;
 use PHPUnit\Framework\AssertionFailedError;
 use PHPUnit\Framework\Test;
@@ -77,7 +76,10 @@ class TestListener implements \PHPUnit\Framework\TestListener
         /* @var $metadata ClassMetadata */
         $metadata = $this->metadataFactory->getMetadataForClass(get_class($test));
         $app = new Application();
-        $app->configure(fn(ContainerBuilder $builder) => $builder->withAppNamespaces());
+
+        $test->setupApplication($app);
+
+        $app->configure();
         $mocks = [];
         $beans = [];
 

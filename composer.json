@@ -10,13 +10,7 @@
     ],
     "autoload": {
         "psr-4": {
-            "Vox\\Framework\\": "src\\",
-            "Vox\\Framework\\Tests\\": "tests\\"
-        }
-    },
-    "autoload-dev": {
-        "psr-4": {
-            "Vox\\Framework\\Tests\\": "tests\\"
+            "Vox\\Framework\\": "src\\"
         }
     },
     "require": {

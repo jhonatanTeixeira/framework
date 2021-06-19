@@ -14,8 +14,8 @@
 
     <target name="phpcs">
         <phpcodesniffer
-                standard="PSR2"
-                file="src"
+            standard="PSR2"
+            file="src"
         >
             <formatter type="checkstyle" outfile="build/log/checkstyle.xml"/>
         </phpcodesniffer>
@@ -23,8 +23,8 @@
 
     <target name="phpmd">
         <phpmd
-                file="src"
-                format="xml"
+            file="src"
+            format="xml"
         >
             <formatter type="xml" outfile="build/log/pmd.xml"/>
         </phpmd>
@@ -32,7 +32,7 @@
 
     <target name="pdepend">
         <phpdepend
-                file="src"
+            file="src"
         >
             <logger type="jdepend-chart" outfile="build/chart/chart.svg"/>
             <logger type="overview-pyramid" outfile="build/chart/pyramid.svg"/>
@@ -43,7 +43,7 @@
 
     <target name="phpcpd">
         <phpcpd
-                file="src"
+            file="src"
         >
             <formatter type="pmd" outfile="build/log/pmd-cpd.xml"/>
         </phpcpd>

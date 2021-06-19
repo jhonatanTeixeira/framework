@@ -13,9 +13,13 @@ class TestCase extends BaseTestCase
     protected ?Application $application = null;
     protected ?Prophet $prophet = null;
 
-    public function setApplication(?Application $application): void
+    public function setApplication(Application $application): void
     {
         $this->application = $application;
+    }
+    
+    public function setupApplication(Application $application) {
+        // do nothing
     }
 
     public function setProphet(Prophet $prophet)
