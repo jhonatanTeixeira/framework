@@ -9,6 +9,8 @@ use Vox\Framework\Behavior\Delete;
 use Vox\Framework\Behavior\Get;
 use Vox\Framework\Behavior\Post;
 use Vox\Framework\Behavior\Put;
+use Vox\Framework\Behavior\RequestBody;
+use Vox\Framework\Exception\HttpNotFoundException;
 
 
 class FooDto {
@@ -52,7 +54,13 @@ class FooController
      * @Get("/{id}")
      */
     public function get($id) {
-        return $this->service->get($id);
+        $value = $this->service->get($id);
+        
+        if (!$value) {
+            throw new HttpNotFoundException();
+        }
+        
+        return $value;
     }
 
     /**
@@ -64,6 +72,7 @@ class FooController
 
     /**
      * @Put("{id}")
+     * @RequestBody("data")
      */
     public function put($id, FooDto $data) {
         return $this->service->put($id, $data);
@@ -73,6 +82,6 @@ class FooController
      * @Delete("{id}")
      */
     public function delete($id) {
-        $this->service->delete($id);
+        return $this->service->delete($id);
     }
 }

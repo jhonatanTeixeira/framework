@@ -37,6 +37,8 @@ class Psr7Factory
             case 'resource':
                 $stream = $this->streamFactory->createStreamFromResource($body);
                 break;
+            case "NULL":
+                return $this->responseFactory->createResponse(204);
             default:
                 $stream = $this->streamFactory->createStream($this->serializer->serialize($format, $body));
         }

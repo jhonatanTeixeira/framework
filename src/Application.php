@@ -17,6 +17,7 @@ use Vox\Data\ObjectHydrator;
 use Vox\Data\ObjectHydratorInterface;
 use Vox\Data\Serializer;
 use Vox\Framework\Behavior\Controller;
+use Vox\Framework\Behavior\ErrorHandler;
 use Vox\Framework\Behavior\Formatter;
 use Vox\Framework\Behavior\Interceptor;
 use Vox\Framework\Behavior\Middleware;
@@ -51,6 +52,7 @@ class Application
                 Interceptor::class,
                 Formatter::class,
                 ParamResolverInterface::class,
+                ErrorHandler::class,
             )
             ->withBeans([
                 App::class => AppFactory::create(),
