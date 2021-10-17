@@ -79,7 +79,7 @@ class TestListener implements \PHPUnit\Framework\TestListener
 
         $test->setupApplication($app);
 
-        $app->configure();
+        $app->configure([$test, 'configureBuilder']);
         $mocks = [];
         $beans = [];
 

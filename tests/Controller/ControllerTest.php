@@ -3,9 +3,11 @@
 
 namespace Vox\Framework\Tests\Controller;
 
+use PhpBeans\Factory\ContainerBuilder;
 use Prophecy\Prophecy\ObjectProphecy;
 use Slim\Psr7\Factory\ServerRequestFactory;
 use Slim\Psr7\Factory\StreamFactory;
+use Vox\Cache\Factory;
 use Vox\Framework\Application;
 use Vox\Framework\Test\Behavior\Mock;
 use Vox\Framework\Test\TestCase;
@@ -20,6 +22,14 @@ class ControllerTest extends TestCase
     
     public function setupApplication(Application $application) {
         $application->addNamespaces('Vox\Framework\Tests\\');
+    }
+
+    public function configureBuilder(ContainerBuilder $containerBuilder)
+    {
+        $containerBuilder->withCache(
+            (new Factory)
+                ->createSimpleCache(Factory::PROVIDER_DOCTRINE, Factory::TYPE_FILE, 'build/cache')
+        );
     }
 
     public function testShouldGetList() {

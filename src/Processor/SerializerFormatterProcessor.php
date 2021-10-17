@@ -11,9 +11,7 @@ use Vox\Data\Serializer;
 use Vox\Framework\Behavior\Formatter;
 use Vox\Framework\Container\ContainerAwareTrait;
 
-/**
- * @PostBeanProcessor()
- */
+#[PostBeanProcessor]
 class SerializerFormatterProcessor implements ContainerAwareInterface
 {
     use ContainerAwareTrait;

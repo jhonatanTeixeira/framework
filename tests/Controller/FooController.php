@@ -19,31 +19,21 @@ class FooDto {
     }
 }
 
-/**
- * @Controller("/foo")
- */
+#[Controller('/foo')]
 class FooController
 {
-    /**
-     * @Autowired()
-     */
+    #[Autowired]
     private FooService $service;
 
-    /**
-     * @Autowired()
-     */
+    #[Autowired]
     private MockableService $mockableService;
 
-    /**
-     * @Get("/mock")
-     */
+    #[Get('/mock')]
     public function getMockData() {
         return $this->mockableService->getMockData();
     }
 
-    /**
-     * @Get()
-     */
+    #[Get]
     public function list() {
         return $this->service->list();
     }
@@ -51,27 +41,22 @@ class FooController
     /**
      * @Get("/{id}")
      */
+    #[Get('/{id}')]
     public function get($id) {
         return $this->service->get($id);
     }
 
-    /**
-     * @Post()
-     */
+    #[Post]
     public function post(FooDto $data) {
         return $this->service->post($data);
     }
 
-    /**
-     * @Put("{id}")
-     */
+    #[Put('{id}')]
     public function put($id, FooDto $data) {
         return $this->service->put($id, $data);
     }
 
-    /**
-     * @Delete("{id}")
-     */
+    #[Delete]
     public function delete($id) {
         $this->service->delete($id);
     }

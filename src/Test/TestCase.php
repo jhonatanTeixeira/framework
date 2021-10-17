@@ -4,6 +4,7 @@
 namespace Vox\Framework\Test;
 
 
+use PhpBeans\Factory\ContainerBuilder;
 use PHPUnit\Framework\TestCase as BaseTestCase;
 use Prophecy\Prophet;
 use Vox\Framework\Application;
@@ -19,6 +20,10 @@ class TestCase extends BaseTestCase
     }
     
     public function setupApplication(Application $application) {
+        // do nothing
+    }
+
+    public function configureBuilder(ContainerBuilder $containerBuilder) {
         // do nothing
     }
 

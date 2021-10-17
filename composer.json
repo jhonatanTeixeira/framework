@@ -14,18 +14,14 @@
         }
     },
     "require": {
-        "vox/php-beans": "^0.6",
+        "php": ">=7.4",
+        "vox/php-beans": "^1.0.0",
         "slim/slim": "^4",
         "slim/psr7": "^1.4",
-        "vox/data": "^0.6.1"
+        "vox/data": "^1.0.0"
     },
     "require-dev": {
-        "phpunit/phpunit": "^8",
-        "phing/phing": "^2",
-        "squizlabs/php_codesniffer": "^2",
-        "phpmd/phpmd": "^2",
-        "sebastian/phpcpd": "^5",
-        "mayflower/php-codebrowser": "^2",
+        "phpunit/phpunit": "^9.3.0",
         "phpspec/prophecy": "^1.13"
     }
 }

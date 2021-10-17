@@ -9,14 +9,10 @@ use Psr\Http\Message\ServerRequestInterface;
 use Vox\Framework\Behavior\Interceptor;
 use Vox\Framework\Component\Psr7Factory;
 
-/**
- * @Interceptor()
- */
+#[Interceptor]
 class ResponseInterceptor
 {
-    /**
-     * @Autowired()
-     */
+    #[Autowired]
     private Psr7Factory $psr7Factory;
 
     public function __invoke($responseData, ServerRequestInterface $request, ResponseInterface $response, array $args) {

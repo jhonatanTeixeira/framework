@@ -6,7 +6,9 @@ namespace Vox\Framework\Test\Behavior;
 /**
  * @Annotation
  * @Target({"PROPERTY"})
+ * @NamedArgumentConstructor
  */
+#[\Attribute(\Attribute::TARGET_PROPERTY)]
 class Mock
 {
     /**
@@ -19,4 +21,10 @@ class Mock
      * @var string
      */
     public $serviceId;
+
+    public function __construct(string $type, string $serviceId = null)
+    {
+        $this->type = $type;
+        $this->serviceId = $serviceId;
+    }
 }

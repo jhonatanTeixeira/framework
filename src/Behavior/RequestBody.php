@@ -6,7 +6,9 @@ namespace Vox\Framework\Behavior;
 /**
  * @Annotation
  * @Target({"METHOD"})
+ * @NamedArgumentConstructor
  */
+#[\Attribute(\Attribute::TARGET_METHOD)]
 class RequestBody
 {
     /**
@@ -18,4 +20,14 @@ class RequestBody
      * @var string
      */
     public $type = null;
+
+    /**
+     * @param string|null $argName
+     * @param string|null $type
+     */
+    public function __construct(string $argName = null, string $type = null)
+    {
+        $this->argName = $argName;
+        $this->type = $type;
+    }
 }
