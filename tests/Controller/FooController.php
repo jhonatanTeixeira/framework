@@ -40,9 +40,6 @@ class FooController
         return $this->service->list();
     }
 
-    /**
-     * @Get("/{id}")
-     */
     #[Get('/{id}')]
     public function get($id) {
         $value = $this->service->get($id);
@@ -60,6 +57,7 @@ class FooController
     }
 
     #[Put('{id}')]
+    #[RequestBody('data')]
     public function put($id, FooDto $data) {
         return $this->service->put($id, $data);
     }

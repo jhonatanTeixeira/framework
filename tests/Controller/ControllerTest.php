@@ -7,6 +7,7 @@ use PhpBeans\Factory\ContainerBuilder;
 use PhpBeans\Annotation\Autowired;
 use Prophecy\Prophecy\ObjectProphecy;
 use Slim\Psr7\Factory\ServerRequestFactory;
+use Vox\Cache\Factory;
 use Vox\Framework\Application;
 use Vox\Framework\Test\Behavior\Mock;
 use Vox\Framework\Test\TestCase;
@@ -14,9 +15,9 @@ use Vox\Framework\Test\TestCase;
 class ControllerTest extends TestCase
 {
     /**
-     * @Mock(MockableService::class)
      * @var MockableService|ObjectProphecy
      */
+    #[Mock(MockableService::class)]
     private ObjectProphecy $mockableService;
     
     public function setupApplication(Application $application) {
@@ -26,7 +27,7 @@ class ControllerTest extends TestCase
     public function configureBuilder(ContainerBuilder $containerBuilder)
     {
         $containerBuilder->withCache(
-            (new Factory)
+            (new Factory())
                 ->createSimpleCache(Factory::PROVIDER_DOCTRINE, Factory::TYPE_FILE, 'build/cache')
         );
     }

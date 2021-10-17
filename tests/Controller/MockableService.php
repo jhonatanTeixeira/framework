@@ -5,9 +5,7 @@ namespace Vox\Framework\Tests\Controller;
 
 use Vox\Framework\Behavior\Service;
 
-/**
- * @Service()
- */
+#[Service]
 class MockableService
 {
     public function getMockData() {
