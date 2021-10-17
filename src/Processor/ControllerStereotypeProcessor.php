@@ -26,6 +26,8 @@ use Vox\Metadata\MethodMetadata;
 
 class ControllerStereotypeProcessor extends AbstractStereotypeProcessor
 {
+    use PrioritizedComponentsTrait;
+    
     private MetadataFactory $metadataFactory;
 
     private EventDispatcher $eventDispatcher;
@@ -62,18 +64,6 @@ class ControllerStereotypeProcessor extends AbstractStereotypeProcessor
             array_filter(
                 array_map(fn($path) => preg_replace('/^\//', '', $path), [$controller->path, $method->path])
             )
-        );
-    }
-
-    private function getPrioritizedComponents(string $className) {
-        return new CallbackPriorityQueue(
-            function ($bean1, $bean2) use ($className) {
-                $behavior1 = $this->metadataFactory->getMetadataForClass($bean1)->getAnnotation($className);
-                $behavior2 = $this->metadataFactory->getMetadataForClass($bean2)->getAnnotation($className);
-
-                return $behavior1->priority <=> $behavior2->priority;
-            },
-            $this->getContainer()->getBeansByComponent($className)
         );
     }
 

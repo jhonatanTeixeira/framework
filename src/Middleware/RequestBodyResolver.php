@@ -48,7 +48,7 @@ class RequestBodyResolver implements ParamResolverInterface
         if ($paramType = $paramsMetadata[$argName]->type) {
             $type = $paramType;
         }
-
+        
         $body = $this->serializer
             ->deserialize($this->defaultFormat, $type, $request->getBody());
 

@@ -25,7 +25,7 @@ class FooService
     }
 
     public function get($id) {
-        return $this->data[$id];
+        return $this->data[$id] ?? null;
     }
 
     public function post(FooDto $data) {
