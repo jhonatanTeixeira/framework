@@ -33,14 +33,12 @@ class ControllerTest extends TestCase
     }
 
     public function testShouldGetList() {
-//        $data = $this->application->handle((new ServerRequestFactory())->createServerRequest('GET', '/foo'));
         $data = $this->get('/foo');
 
         $this->assertEquals('[{"foo":"bar"},{"foo":"baz"}]', $data->getBody()->getContents());
     }
 
     public function testShouldGetOne() {
-//        $data = $this->application->handle((new ServerRequestFactory())->createServerRequest('GET', '/foo/0'));
         $data = $this->get('/foo/0');
 
         $this->assertEquals('{"foo":"bar"}', $data->getBody()->getContents());
@@ -73,5 +71,18 @@ class ControllerTest extends TestCase
         $data = $this->get('/foo/mock');
 
         $this->assertEquals('{"foo":"bar"}', $data->getBody()->getContents());
+    }
+
+    public function testShouldThrowErrorNoTypeDefined() {
+        $response = $this->post('/foo/error', []);
+
+        $this->assertInternalError($response)
+            ->assertResponseContains($response, 'no type defined');
+    }
+
+    public function testShouldParseRequestParamOnParameter() {
+        $data = $this->put('/foo/1/param', ['foo' => 'bar baz']);
+
+        $this->assertEquals('["1",{"foo":"bar baz"}]', $data->getBody()->getContents());
     }
 }

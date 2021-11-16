@@ -27,6 +27,10 @@ class Psr7Factory
     }
 
     public function createResponse(int $status, $body, $format = 'json') {
+        if ($body instanceof \Throwable) {
+            $body = (string) $body;
+        }
+
         switch (gettype($body)) {
             case 'string':
             case 'integer':

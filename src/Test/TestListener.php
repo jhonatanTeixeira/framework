@@ -81,7 +81,7 @@ class TestListener implements \PHPUnit\Framework\TestListener
 
         $app->configure([$test, 'configureBuilder']);
         $mocks = [];
-        $beans = [];
+        $beans = ['debug' => true];
 
         foreach ($metadata->getAnnotatedProperties(Mock::class) as $propertyMetadata) {
             $annotation = $propertyMetadata->getAnnotation(Mock::class);

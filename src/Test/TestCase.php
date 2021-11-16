@@ -61,18 +61,32 @@ class TestCase extends BaseTestCase implements HttpClientInterface
 
     public function assertStatus(int $status, ResponseInterface $response) {
         $this->assertEquals($status, $response->getStatusCode());
+
+        return $this;
     }
 
     public function assertOk(ResponseInterface $response) {
         $this->assertLessThan(300, $response->getStatusCode());
         $this->assertGreaterThanOrEqual(200, $response->getStatusCode());
+
+        return $this;
     }
 
     public function assertNotFound(ResponseInterface $response) {
         $this->assertStatus(404, $response);
+
+        return $this;
     }
 
     public function assertInternalError(ResponseInterface $response) {
         $this->assertGreaterThanOrEqual(500, $response->getStatusCode());
+
+        return $this;
+    }
+
+    public function assertResponseContains(ResponseInterface $response, string $value) {
+        $this->assertStringContainsString($value, $response->getBody()->getContents());
+
+        return $this;
     }
 }

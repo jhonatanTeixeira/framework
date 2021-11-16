@@ -30,25 +30,33 @@ class RequestBodyResolver implements ParamResolverInterface
 
         /* @var $paramsMetadata \Vox\Metadata\ParamMetadata[] */
         $paramsMetadata = [];
-        $params = [];
 
         foreach ($methodMetadata->params as $param) {
             $paramsMetadata[$param->name] = $param;
         }
 
-        $type = null;
+        if (count($paramsMetadata) == 0) {
+            return [];
+        }
+
+        $argName = reset($paramsMetadata)->name;
 
         if ($requestBody = $methodMetadata->getAnnotation(RequestBody::class)) {
-            $argName = $requestBody->argName;
-            $type = $requestBody->type;
-        } else {
-            $argName = reset($paramsMetadata)->name;
+            $argName = $requestBody->argName ?? $argName;
+        } elseif ($annotatedParams = array_filter($paramsMetadata, fn($p) => $p->reflection->getAttributes(RequestBody::class))) {
+            if (count($annotatedParams) > 1) {
+                throw new \LogicException("only one RequestBody allowed for method {$controllerMetadata->name}::{$methodMetadata->name}");
+            }
+
+            $argName = reset($annotatedParams)->name;
         }
 
-        if ($paramType = $paramsMetadata[$argName]->type) {
-            $type = $paramType;
+        $type = $paramsMetadata[$argName]->type ?? $requestBody?->type;
+
+        if (!$type) {
+            throw new \LogicException("no type defined for param {$paramsMetadata[$argName]->name} on {$controllerMetadata->name}::{$methodMetadata->name}");
         }
-        
+
         $body = $this->serializer
             ->deserialize($this->defaultFormat, $type, $request->getBody());
 

@@ -66,4 +66,14 @@ class FooController
     public function delete($id) {
         return $this->service->delete($id);
     }
+
+    #[Post('error')]
+    public function mappedError(#[RequestBody] $noType) {
+        // should throw error, no type matched
+    }
+
+    #[Put('{id}/param')]
+    public function paramRequestBody($id, #[RequestBody] FooDto $foo) {
+        return [$id, $foo];
+    }
 }
